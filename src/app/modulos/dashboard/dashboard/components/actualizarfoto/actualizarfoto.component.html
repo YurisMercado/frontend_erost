@@ -1,0 +1,26 @@
+<form [formGroup]="formulario">
+    <div class="flex flex-column justify-content-center align-items-center">
+      <div class="p-2">
+        <p-fileUpload
+            url="https://www.primefaces.org/cdn/api/upload.php"
+            [multiple]="false"
+            accept="image/*"
+            (onSelect)="onUpload($event)"
+            maxFileSize="1000000"
+        >
+        </p-fileUpload>
+      </div>
+
+  
+      <div class="p-2">
+        <p-button
+          icon="pi pi-trash"
+          [rounded]="true"
+          label="Guardar"
+          severity="success"
+          (onClick)="guardarFoto()"
+        />
+      </div>
+    </div>
+  </form>
+  

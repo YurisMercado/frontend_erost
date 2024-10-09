@@ -1,0 +1,112 @@
+<p-fieldset legend="Modelos">
+  <div class="flex align-items-center justify-content-end">
+      @if (this.obtenerRolConectado() == '1') {
+        <p-button
+        label="Registrar modelo"
+        icon="pi pi-plus"
+        [rounded]="true"
+        severity="primary"
+        (onClick)="abrirModal()"
+      />
+
+                  }
+
+  </div>
+  <div class="flex flex-wrap">
+      @for( modelo of listaModelos; track  modelo.idts_empleado) {
+        
+      
+     
+        
+        <div
+        class="flex align-items-center justify-content-center font-bold border-round col-4 cursor-pointer card-efect"
+      > 
+        <p-card header="{{modelo.nombre}}" >
+        
+          <ng-template pTemplate="header">
+            @if(modelo.notificacion && modelo.notificacion > 0){
+              <i class="pi pi-bell text-3xl p" pBadge value="{{modelo.cantidadNotificaciones}}"></i>
+            }
+            <img
+              alt="Card"
+              class="img-fluid"
+              src="{{modelo.fotos[0].base64}}"
+            />
+          </ng-template>
+          <div class="flex flex-column">
+            <span class="p-0 m-0"><b>Edad:</b> <small>{{modelo.edad}}</small></span>
+            <span class="p-0 m-0"
+              ><b>Email:</b> <small>{{modelo.email}}</small></span
+            >
+          </div>
+          <div class="mt-2">
+            <p-accordion >
+              <p-accordionTab header="Conocimientos">
+                <div class="flex flex-wrap gap-2" >
+                   @for(conocimiento of modelo.conocimientos; track  conocimiento.idts_empleado){
+                    @if(conocimiento.nombre){
+                      <p-chip
+                        label="{{conocimiento.nombre}}"
+                        image="{{modelo.fotos[0].base64}}"
+                        alt="Avatar image"
+                      />
+
+                    }@else {
+                      <p>No hay información</p>
+                    }
+                   }
+
+               
+                </div>
+              </p-accordionTab>
+              <p-accordionTab header="Habilidades">
+                @for(habilidades of modelo.habilidades; track  habilidades.idts_empleado){
+                  @if(habilidades.nombre){
+                    <p-chip
+                    label="{{habilidades.nombre}}"
+                    image="{{modelo.fotos[0].base64}}"
+                    alt="Avatar image"
+                  />
+                  }@else {
+                    <p>No hay información</p>
+                  }
+               
+                 }
+
+              </p-accordionTab>
+            </p-accordion>
+          </div>
+          <ng-template pTemplate="footer">
+            <div class="flex gap-3 mt-1">
+              <!-- <p-button label="Cancel" severity="secondary" class="w-full" styleClass="w-full" />
+                          <p-button label="Save" class="w-full" styleClass="w-full" /> -->
+            </div>
+          </ng-template>
+            <div class="p-2"> 
+              <p-button
+              icon="pi pi-eye"
+              [rounded]="true"
+              label="ver"
+              severity="success"
+              (click)="verModelo(modelo)"
+            />
+            </div>
+        </p-card>
+      </div>
+   
+    } 
+  </div>
+  <!-- boton  -->
+  
+ 
+</p-fieldset>
+
+<p-dialog
+  header="Registrar modelo"
+  [(visible)]="nuevoModelo"
+  [modal]="true"
+  [position]="'top'"
+  [style]="{ width: '90rem' }"
+>
+  <app-registrar-modelo (cerrarDialogoEmit)="cerrarDialogo()" ></app-registrar-modelo>
+</p-dialog>

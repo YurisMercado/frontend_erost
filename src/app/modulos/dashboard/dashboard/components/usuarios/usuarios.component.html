@@ -1,0 +1,58 @@
+<p-toast />
+
+<div class="card">
+    {{usuarios | json }}
+    <p-table 
+    
+        [value]="usuarios" 
+        selectionMode="multiple" 
+        dataKey="code" 
+        [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h3>Usuarios</h3>
+                @if (this.obtenerRolConectado() == '1') {
+                    <p-button label="Nuevo usuario" icon="pi pi-plus" [rounded]="true" severity="primary" (onClick)="monstrarDialogo()" />
+
+                  }
+              
+            </div>
+            
+        </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Edad</th>
+                    <th>Cargo</th>
+                    <th>Rol</th>
+                    <th>Inactivar</th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-usuario let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="usuario" [pSelectableRowIndex]="rowIndex" (click)="usuarioSeleccionado(usuario)"  [ngClass]="{'bg-danger': usuario.estado == 'INACTIVO'}" >
+                    <td>{{ usuario.idts_empleado }}</td>
+                    <td>{{ usuario.nombre_empleado }}</td>
+                    <td>{{ usuario.email_usuario }}</td>
+                    <td>{{ usuario.edad }}</td>
+                    <td>{{ usuario.cargo }}</td>
+                    <td>{{ usuario.rol }}</td>
+                    <td  
+                       
+                    >
+                        <input type="checkbox" [checked]="usuario.estado== 'INACTIVO' ? true: false " (click)="inactivarUsuiario(usuario)"  id="">
+                    </td>
+                </tr>
+            </ng-template>
+    </p-table>
+</div>
+<p-dialog 
+    header="Registrar nuevo usuario"
+    [(visible)]="nuevoUsuario" 
+    [modal]="true" 
+    [position]="'top'"
+    [style]="{ width: '90rem' }">
+    <app-nuevo-usuario [listaRoles]="listaRoles" (registrarUsuariosEmit)="registrarUsuario($event)" ></app-nuevo-usuario>
+</p-dialog>

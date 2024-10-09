@@ -1,0 +1,97 @@
+<p-toast></p-toast>
+
+<div class="p-card p-fluid p-mx-auto p-mt-5">
+  <div class="p-card-header text-center p-6">
+    <p-avatar
+      image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+      pBadge
+      value="{{ notificaciones.length }}"
+      size="xlarge"
+      severity="danger"
+      (click)="irModelo()"
+    />
+  </div>
+  <div class="p-card-body">
+    <div class="text-center p-mb-4">
+      <h2 class="p-m-0">Bienvenido, {{ informacionUsuario.nombre }}</h2>
+      <p class="p-text-secondary">{{ informacionUsuario.cargo }}</p>
+    </div>
+
+    <div
+      class="flex justify-content-start align-items-center p-d-flex p-jc-between p-ai-center p-mb-2"
+    >
+      <b> <i class="pi pi-envelope font-semibold"></i></b>
+      <span class="p-ml-2 ml-2">{{ informacionUsuario.email }}</span>
+    </div>
+    <div
+      class="flex justify-content-start align-items-center p-d-flex p-jc-between p-ai-center p-mb-2"
+    >
+      <i class="pi pi-calendar font-semibold"></i>
+      <span class="p-ml-2 ml-2">{{ informacionUsuario.edad }} años </span>
+    </div>
+  </div>
+
+</div>
+<p-dialog
+  header="Cambio de contraseña requerido"
+  [modal]="true"
+  [(visible)]="visible"
+  [position]="'top'"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="false"
+  [style]="{ width: '45rem' }"
+>
+  <div class="p-fluid p-formgrid p-grid">
+    <form [formGroup]="formulario">
+      <label for="email1" class="block text-900 text-xl font-medium mb-2"
+        ><small>Contraseña actual</small></label
+      >
+      <input
+        type="password"
+        formControlName="paswordactual"
+        pInputText
+        placeholder="Contraseña actual"
+        [style]="{ width: '100%' }"
+      />
+
+      <label for="password1" class="block text-900 font-medium text-xl mb-2"
+        ><small>Nueva contraseña</small></label
+      >
+
+      <div class="flex align-items-center justify-content-between  gap-5">
+        <input
+          type="password"
+          formControlName="password"
+          pInputText
+          placeholder="Contraseña"
+          [style]="{ width: '100%' }"
+        />
+      </div>
+
+      <label for="password1" class="block text-900 font-medium text-xl mb-2"
+      ><small>Confirmar contraseña</small></label
+    >
+
+    <div class="flex align-items-center justify-content-between mb-5 gap-5">
+      <input
+        type="password"
+        formControlName="password2"
+        pInputText
+        placeholder="Confirmar contraseña"
+        [style]="{ width: '100%' }"
+      />
+    </div>
+
+      <button
+        pButton
+        pRipple
+        label="Cambiar contraseña"
+        class="p-button-success w-100"
+        [style]="{ width: '100%' }"
+        (click)="cambiarContrasena()"
+        [disabled]="formulario.invalid"
+      ></button>
+    </form>
+  </div>
+</p-dialog>

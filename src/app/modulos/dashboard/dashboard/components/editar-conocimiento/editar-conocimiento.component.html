@@ -1,0 +1,41 @@
+<form [formGroup]="formulario">
+    <div class="flex flex-column justify-content-center align-items-center">
+        <div class="flex flex-wrap col-12">
+            <div class="p-2">
+                <label
+                    for="email1"
+                    class="block text-900 text-xl font-medium mb-2"
+                    ><small>Nombre </small></label
+                >
+                <input type="text" formControlName="nombre" pInputText placeholder="Nombre del conocimiento" [style]="{width: '100%'}"/>
+        
+              </div>
+              <div class="p-2">
+                <label
+                for="email1"
+                class="block text-900 text-xl font-medium mb-2"
+                ><small>Descripción </small></label
+            >
+                <textarea
+                rows="5"
+                cols="30"
+                pInputTextarea
+                placeholder="Descripción"
+                formControlName="descripcion"
+              ></textarea>
+              </div>
+        </div>
+ 
+  
+      <div class="p-2">
+        <p-button
+          icon="pi pi-trash"
+          [rounded]="true"
+          label="Guardar conocimiento"
+          severity="success"
+          (onClick)="guardarComentario()"
+        />
+      </div>
+    </div>
+  </form>
+  

@@ -1,0 +1,130 @@
+<form [formGroup]="formulario">
+    <div class="grid flex-wrap">
+        <div class="col-3">
+            <div class=" border-round-sm  font-bold">
+                <div class="flex flex-column gap-2">
+                    <label for="username">Nombre  </label>
+                    <input 
+                        pInputText 
+                        id="username" 
+                        formControlName="nombre"
+                        placeholder="Nombre"
+                        aria-describedby="username-help" 
+                       />
+                    @if(formulario.get('nombre')?.touched && formulario.get('nombre')?.hasError('required')){
+                        <small id="username-help" class="text-danger">
+                            El campo es requerido.
+                        </small>                         
+                       }
+
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class=" border-round-sm  font-bold">
+                <div class="flex flex-column gap-2">
+                    <label for="username">Email</label>
+                    <input 
+                        pInputText 
+                        id="username" 
+                        formControlName="email"
+                        placeholder="Email"
+                        aria-describedby="username-help" 
+                       />
+                       @if(formulario.get('email')?.touched && formulario.get('email')?.hasError('required')){
+                        <small id="username-help" class="text-danger">
+                            El campo es requerido.
+                        </small>                         
+                       }
+
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class=" border-round-sm  font-bold">
+                <div class="flex flex-column gap-2">
+                    <label for="username">Edad</label>
+                    <input 
+                        pInputText 
+                        id="username" 
+                        formControlName="edad"
+                        placeholder="Edad"
+                        aria-describedby="username-help" 
+                       />
+                       @if(formulario.get('edad')?.touched && formulario.get('edad')?.hasError('required')){
+                        <small id="username-help" class="text-danger">
+                            El campo es requerido.
+                        </small>                         
+                       }
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class=" border-round-sm  font-bold">
+                <div class="flex flex-column gap-2">
+                    <label for="username">Cargo</label>
+                    <p-dropdown 
+                    [options]="listaCargo" 
+                    [style]="{width: '100%'}"
+                    optionLabel="label" 
+                    formControlName="cargo"
+                    
+                    placeholder="Seleccione un cargo" />
+                    @if(formulario.get('cargo')?.touched && formulario.get('cargo')?.hasError('required')){
+                        <small id="username-help" class="text-danger">
+                            El campo es requerido.
+                        </small>                         
+                       }
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class=" border-round-sm  font-bold">
+                <div class="flex flex-column gap-2">
+                    <p-fileUpload 
+                        url="https://www.primefaces.org/cdn/api/upload.php" 
+                        [multiple]="false" 
+                        accept="image/*" 
+                        (onSelect)="onUpload($event)"
+                        maxFileSize="1000000">
+                            <ng-template pTemplate="content">
+                                <!-- <ul *ngIf="uploadedFiles.length">
+                                    <li *ngFor="let file of uploadedFiles">
+                                        {{ file.name }} - {{ file.size }} bytes
+                                    </li>
+                                </ul> -->
+                            </ng-template>
+                    </p-fileUpload>
+                    @if(formulario.get('foto')?.touched && formulario.get('foto')?.hasError('required')){
+                        <small id="username-help" class="text-danger">
+                            El campo es requerido.
+                        </small>                         
+                       }
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class=" border-round-sm  font-bold">
+                <div class="flex flex-column gap-2">
+                    <label for="username">Rol</label>
+                    <p-dropdown 
+                    [options]="listaRoles" 
+                    [style]="{width: '100%'}"
+                    optionLabel="tipo_rol" 
+                    [appendTo]="'body'"
+                    formControlName="rol"
+                    placeholder="Seleccione un rol" />
+                    @if(formulario.get('rol')?.touched && formulario.get('rol')?.hasError('required')){
+                        <small id="username-help" class="text-danger">
+                            El campo es requerido.
+                        </small>                         
+                       }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" icon="pi pi-times" [rounded]="true" severity="secondary" />
+        <p-button label="Guardar" icon="pi pi-save" [rounded]="true" severity="success" (onClick)="registrarUsuario()" />
+    </div>  
+</form>

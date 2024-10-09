@@ -1,0 +1,33 @@
+<form [formGroup]="formulario">
+  <div class="flex flex-column justify-content-center align-items-center">
+    <div class="p-2">
+      <p-dropdown
+        [options]="tipoComentario"
+        optionLabel="label"
+        class="w-full"
+        width="100%"
+        
+        formControlName="tipo"
+        placeholder="Tipo de comentario"
+      />
+    </div>
+
+    <textarea
+      rows="5"
+      cols="30"
+      pInputTextarea
+      placeholder="Comentario"
+      formControlName="comentario"
+    ></textarea>
+
+    <div class="p-2">
+      <p-button
+        icon="pi pi-trash"
+        [rounded]="true"
+        label="Guardar comentario"
+        severity="success"
+        (onClick)="guardarComentario()"
+      />
+    </div>
+  </div>
+</form>

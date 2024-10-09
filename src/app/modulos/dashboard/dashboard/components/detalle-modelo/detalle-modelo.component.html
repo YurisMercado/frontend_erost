@@ -1,0 +1,314 @@
+<p-toast></p-toast>
+
+<form [formGroup]="formulario">
+  <div class="flex flex-wrap">
+    <!-- alerta en forma de div  -->
+      
+
+    <div class="col-6" >
+      @if(obtenerRolConectado()== '2'){
+        <p-button
+        icon="pi pi-plus"
+        [rounded]="true"
+        label="Crear un comentario"
+        severity="success"
+        (onClick)="crearComentario()"
+       
+      />
+      }
+    
+      <div class="flex flex-wrap">
+        <div class="col-5">
+          <div class="border-round-sm font-bold">
+            <div class="flex flex-column gap-2">
+              <label for="username">Nombre </label>
+              <input
+                pInputText
+                id="username"
+                formControlName="nombre"
+                placeholder="Nombre"
+                aria-describedby="username-help"
+              />
+              @if(formulario.get('nombre')?.touched &&
+              formulario.get('nombre')?.hasError('required')){
+              <small id="username-help" class="text-danger">
+                El campo es requerido.
+              </small>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="col-5">
+          <div class="border-round-sm font-bold">
+            <div class="flex flex-column gap-2">
+              <label for="username">Email </label>
+              <input
+                pInputText
+                id="username"
+                formControlName="nombre"
+                placeholder="email"
+                aria-describedby="username-help"
+              />
+              @if(formulario.get('nombre')?.touched &&
+              formulario.get('nombre')?.hasError('required')){
+              <small id="username-help" class="text-danger">
+                El campo es requerido.
+              </small>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="col-5">
+          <div class="border-round-sm font-bold">
+            <div class="flex flex-column gap-2">
+              <label for="username">Edad </label>
+              <input
+                pInputText
+                id="username"
+                formControlName="edad"
+                placeholder="email"
+                aria-describedby="username-help"
+              />
+              @if(formulario.get('nombre')?.touched &&
+              formulario.get('nombre')?.hasError('required')){
+              <small id="username-help" class="text-danger">
+                El campo es requerido.
+              </small>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="col-12 flex justify-content-start align-items-center border-round-sm font-bold">
+          @if(obtenerRolConectado() === '1'){
+            <button
+              pButton
+              pRipple
+              label="Actualizar Información"
+              class="p-button-success"
+              (click)="actualizarInformacion()"
+            ></button>
+          }
+        </div>
+        <div class="flex col-12">
+          <div class="flex align-items-center gap-2 mr-2">
+            <div class="flex flex-column gap-2">
+              <label for="">Actitud positiva</label>
+              <input type="checkbox" formControlName="actitud_positiva"  (change)="guardarActidu('1')"  id="" />
+            </div>
+          </div>
+          <div class="flex align-items-center mr-2">
+            <div class="flex flex-column gap-2">
+              <label for="">Profesionalismo</label>
+              <input type="checkbox" formControlName="profesionalismo" (change)="guardarActidu('2')" id="" />
+            </div>
+          </div>
+          <div class="flex align-items-center">
+            <div class="flex flex-column gap-2">
+              <label for="">Adaptabilidad</label>
+              <input type="checkbox" formControlName="adaptabilidad" (change)="guardarActidu('3')" id="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-6">
+      <p-card>
+        <p-galleria
+          [value]="informacionModelo.fotos"
+          [responsiveOptions]="responsiveOptions"
+          [containerStyle]="{ 'max-width': '640px' }"
+          [numVisible]="5"
+        >
+          <ng-template pTemplate="item" let-item let-i="index">
+            <img [src]="item.base64" class="img"  />
+            <p-button
+              icon="pi pi-file-edit"
+              [rounded]="true"
+              label="Editar"
+              severity="success"
+              (click)="editarFoto(item)"
+              [disabled]="obtenerRolConectado() === '2'"
+            />
+          </ng-template>
+          <ng-template pTemplate="thumbnail" let-item>
+            <div class="grid grid-nogutter justify-content-center">
+              <img [src]="item.base64" width="50" />
+            </div>
+          </ng-template>
+        </p-galleria>
+      </p-card>
+    </div>
+  </div>
+</form>
+@if(sidebarVisible  && obtenerRolConectado() === '1'){
+  <div class="flex col-12 w-full" >
+    <p-table [value]="informacionModelo.detalleNotificacion" [style]="{width: '100%'}" >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre registrador</th>
+          <th>Fecha de registro</th>
+          <th>id modelo </th>
+          <th>Tipo de comentario</th>
+          <th>Descripción</th>
+          <th>Marcar como leido</th>
+  
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-detalleNotificacion>
+        <tr>
+          <td>{{ detalleNotificacion.nombre_registrador }}</td>
+          <td>{{ detalleNotificacion.fecha_registro }}</td>
+          <td>{{ detalleNotificacion.idts_modelo }}</td>
+          <td>{{ detalleNotificacion.tipo_comentario }}</td>
+          <td>{{ detalleNotificacion.descripcion }}</td>
+          <td > <input type="checkbox" name="" (click)="marcarNoficicacionLeida(detalleNotificacion)"  id=""> </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="5">No hay información registrada</td>
+        </tr>
+    </ng-template>
+    </p-table>
+  </div>
+}
+<div class="flex col-12">
+  <div class="col-6">
+    <p-fieldset legend="Conocimientos">
+      
+      <div class="flex flex-wrap gap-2">
+        <p-table [value]="informacionModelo.conocimientos">
+          @if(obtenerRolConectado() === '1'){
+            <ng-template pTemplate="caption">
+              <div style="text-align: right">
+                  <p-button 
+                      icon="pi pi-pi-plus" 
+                      label="Nuevo conocimiento" 
+                      (onClick)="crearConocimiento()" 
+                       />
+              </div>
+          </ng-template>
+          }
+        
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Accion</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-conocimiento>
+            <tr>
+              <td>{{ conocimiento.nombre }}</td>
+              <td>{{ conocimiento.descripcion }}</td>
+              <td >
+                <div class="flex gap-2">
+                  <p-button
+                    icon="pi pi-file-edit"
+                    [rounded]="true"
+                    severity="success"
+                    (click)="editarConocimiento(conocimiento)"
+                    [disabled]="obtenerRolConectado() === '2'"
+                  />
+                  <p-button
+                    icon="pi pi-trash"
+                    [rounded]="true"
+                    [disabled]="obtenerRolConectado() === '2'"
+                    (onClick)="eliminarConocimiento(conocimiento)"  
+                    severity="danger"
+                  />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5">No hay información registrada</td>
+            </tr>
+        </ng-template>
+        </p-table>
+      </div>
+    </p-fieldset>
+  </div>
+  <div class="col-6">
+    <p-fieldset legend="Habilidades">
+      <div class="flex flex-wrap gap-2">
+        <p-table [value]="informacionModelo.habilidades">
+          @if(obtenerRolConectado() === '1'){
+            <ng-template pTemplate="caption">
+              <div style="text-align: right">
+                  <p-button 
+                      icon="pi pi-pi-plus" 
+                      label="Nueva habilidad" 
+                      (onClick)="crearHabilidad()"
+                       />
+              </div>
+          </ng-template>
+          }
+        
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Accion</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-conocimiento>
+            <tr>
+              <td>{{ conocimiento.nombre }}</td>
+              <td>{{ conocimiento.descripcion }}</td>
+              <td>
+                <div class="flex gap-2">
+                  <p-button
+                    icon="pi pi-file-edit"
+                    [rounded]="true"
+                    severity="success"
+                     (onClick)="editarHabilidad(conocimiento)"
+                    [disabled]="obtenerRolConectado() === '2'"
+                  />
+                  <p-button
+                    icon="pi pi-trash"
+                    [rounded]="true"
+                    severity="danger"
+                    (onClick)="eliminarHabilidad(conocimiento)"
+                    [disabled]="obtenerRolConectado() === '2'"
+                  />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-fieldset>
+  </div>
+</div>
+
+<p-dialog [header]="titulo" [modal]="true" [(visible)]="visible" [style]="{ width: '45rem' }">
+  @switch (pantalla) {
+    @case ('comentarioMonitor') {
+     <app-comentario-monitor [idModelo]="informacionModelo.idts_empleado"  ></app-comentario-monitor>
+    }
+    @case ('actualizarFoto') {
+      <app-actualizarfoto  [idts_fotos]="idts_fotos" ></app-actualizarfoto>
+    }
+    @case ('nuevoConocimiento') {
+      <app-nuevo-conocimiento [idModelo]="informacionModelo.idts_empleado" (consultarModelosEmit)="consultarModelos()" ></app-nuevo-conocimiento>
+    }
+
+    @case ('nuevaHabilidad') {
+      <app-nueva-habilidad [idModelo]="informacionModelo.idts_empleado" (consultarModelosEmit)="consultarModelos()" ></app-nueva-habilidad>
+    }
+    @case ('editarConocimiento') {
+      <app-editar-conocimiento [informacionEditar]="informacionSeleccionada"  ></app-editar-conocimiento>
+    }
+    @case ('editarHabilidad') {
+      <app-editar-habilidad [informacionEditar]="informacionSeleccionada"  ></app-editar-habilidad>
+    }
+
+    
+    @default {
+      <span>No hay una pantalla configurada</span>
+    }
+  }
+</p-dialog>
