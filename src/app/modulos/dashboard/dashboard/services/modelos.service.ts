@@ -71,5 +71,9 @@ export class ModelosService {
     return this.http.post<Observable<any>>(this.url + `eliminar-modelo`, data);
   }
 
+  eliminarFoto(data: any): Observable<any>{
+    return this.http.post<Observable<any>>(this.url + `eliminar-foto`, data);
+  }
+
 
 }

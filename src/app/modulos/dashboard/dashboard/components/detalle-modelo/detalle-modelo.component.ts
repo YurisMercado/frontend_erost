@@ -145,6 +145,26 @@ export class DetalleModeloComponent implements OnInit {
     this.idts_fotos = foto.idts_fotos;
   }
 
+  eliminarFoto(foto: any) {
+     const parametros = {
+      idts_fotos: foto.idts_fotos
+     }
+
+      this.modelosService.eliminarFoto(parametros).subscribe({ 
+        next: (data) => {
+          if(data.status == 200){
+            this.messageService.add({severity:'success', summary: 'Exito', detail: 'Foto eliminada correctamente'});
+            this.informacionModelo.fotos = this.informacionModelo.fotos.filter((foto: any) => foto.idts_fotos != parametros.idts_fotos);
+          }
+        },
+        error: (error) => {
+          this.messageService.add({severity:'error', summary: 'Error', detail: 'Error al eliminar la foto'});
+        }
+       })
+
+  }
+
+
   crearComentario() {
     this.visible = true;
     this.pantalla = 'comentarioMonitor';

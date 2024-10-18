@@ -104,7 +104,6 @@ export class ModelosComponent implements OnInit {
   }
 
 elimiarModelo(_t8: any) {
-  console.log(_t8);
   const parametros = {
     idts_empleado: _t8.idts_empleado
   }

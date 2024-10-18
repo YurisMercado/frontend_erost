@@ -130,6 +130,14 @@
               (click)="editarFoto(item)"
               [disabled]="obtenerRolConectado() === '2'"
             />
+            <p-button
+            icon="pi pi-file-edit"
+            [rounded]="true"
+            label="Eliminar"
+            severity="danger"
+            (click)="eliminarFoto(item)"
+            [disabled]="obtenerRolConectado() === '2'"
+          />
           </ng-template>
           <ng-template pTemplate="thumbnail" let-item>
             <div class="grid grid-nogutter justify-content-center">
