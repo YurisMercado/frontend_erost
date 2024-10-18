@@ -103,4 +103,26 @@ export class ModelosComponent implements OnInit {
     return rol
   }
 
+elimiarModelo(_t8: any) {
+  console.log(_t8);
+  const parametros = {
+    idts_empleado: _t8.idts_empleado
+  }
+  this.modelosService.eliminarModelo(parametros).subscribe({
+    next: (data) => {
+      if(data.status == 200){
+        this.messageService.add({severity:'success', summary: 'Exito', detail: 'Modelo eliminado correctamente'});
+        this.consultarModelos();
+      }
+    },
+    error: (error) => {
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Error al eliminar el modelo'});
+    }
+  })
+}
+ 
+
+  
+
+
 }

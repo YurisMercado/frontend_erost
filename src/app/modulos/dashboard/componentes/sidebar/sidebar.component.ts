@@ -14,9 +14,12 @@ export class SidebarComponent {
 
   model: any[] = [];
 
-    constructor(public layoutService: LayoutService) { }
+    constructor(public layoutService: LayoutService) { 
+        
+    }
 
     ngOnInit() {
+        let rol = localStorage.getItem('rol');
         this.model = [
             {
                 label: 'Inicio',
@@ -27,7 +30,7 @@ export class SidebarComponent {
             {
                 label: 'Modulos',
                 items: [
-                    { label: 'Usuarios', icon: 'pi pi-fw pi-user-plus', routerLink: ['/dashboard/usuarios'] },
+                    { label: 'Usuarios', icon: 'pi pi-fw pi-user-plus', routerLink: ['/dashboard/usuarios'], visible: rol == '1' },
                     { label: 'Modelos', icon: 'pi pi-fw pi-users', routerLink: ['/dashboard/modelos'] },
                  
                 ]

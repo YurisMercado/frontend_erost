@@ -66,5 +66,10 @@ export class ModelosService {
     return this.http.post<Observable<any>>(this.url + `editar-habilidad`, data);
   }
 
+  
+  eliminarModelo(data: any): Observable<any>{
+    return this.http.post<Observable<any>>(this.url + `eliminar-modelo`, data);
+  }
+
 
 }

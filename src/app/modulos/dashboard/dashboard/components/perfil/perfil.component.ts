@@ -24,6 +24,7 @@ export class PerfilComponent implements OnInit {
   
   formulario: FormGroup = new FormGroup({});
   listaModelos: any;
+  cambiarpassword: boolean = false;
 
   constructor(private usuariosService: UsuariosService, private fb:FormBuilder, private messageService: MessageService, private router:Router ) {}
   informacionUsuario: any = {};
@@ -95,7 +96,11 @@ export class PerfilComponent implements OnInit {
         next: (response) => {
           if(response.status == 200){
             this.messageService.add({severity:'success', summary: 'Exito', detail: 'Contraseña actualizada correctamente'});
-            this.visible = false;
+            setTimeout(() => {
+              this.visible = false;
+              this.router.navigate(['/login']);
+              localStorage.clear();
+            }, 1000);
           }
         },
         error: (error) => {
@@ -118,6 +123,21 @@ export class PerfilComponent implements OnInit {
 
   irModelo(){
     this.router.navigate(['/dashboard/modelos']);
+  }
+
+  obtenerRolConectado(){
+    let rol = localStorage.getItem('rol');
+    return rol;
+  }
+
+  cambiarContrasenaUsuario(){
+    this.visible = true;
+    this.cambiarpassword = true;
+  }
+
+  ocultarDialogo(){
+    this.visible = false;
+    this.cambiarpassword = false;
   }
 
 }

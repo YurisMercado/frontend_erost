@@ -28,6 +28,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { UsuariosService } from '../../services/usuarios.service';
 import { EditarConocimientoComponent } from '../editar-conocimiento/editar-conocimiento.component';
 import { EditarHabilidadComponent } from '../editar-habilidad/editar-habilidad.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-modelo',
@@ -79,7 +80,8 @@ export class DetalleModeloComponent implements OnInit {
     private messageService: MessageService,
     private modelosService: ModelosService,
     private modelosComponent: ModelosComponent,
-    private  usuariosService: UsuariosService 
+    private  usuariosService: UsuariosService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -292,7 +294,6 @@ export class DetalleModeloComponent implements OnInit {
 
   consultarModelos(){
     this.visible = false;
-    this.modelosComponent.consultarModelos();
 
   }
 
@@ -306,7 +307,9 @@ export class DetalleModeloComponent implements OnInit {
         next: (data) => {
           if(data.status == 200){
             this.messageService.add({severity:'success', summary: 'Exito', detail: 'Notificación marcada como leida'});
-            this.consultarModelos();
+            setTimeout(() => {
+              this.router.navigate(['/dashboard/modelos']);
+            }, 2000);
           }
         }
       })

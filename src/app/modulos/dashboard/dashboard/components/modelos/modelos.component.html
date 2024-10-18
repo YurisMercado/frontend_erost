@@ -24,7 +24,7 @@
         <p-card header="{{modelo.nombre}}" >
         
           <ng-template pTemplate="header">
-            @if(modelo.notificacion && modelo.notificacion > 0){
+            @if(modelo.notificacion && modelo.notificacion > 0 && this.obtenerRolConectado() == '1') {
               <i class="pi pi-bell text-3xl p" pBadge value="{{modelo.cantidadNotificaciones}}"></i>
             }
             <img
@@ -88,8 +88,16 @@
               [rounded]="true"
               label="ver"
               severity="success"
+              class="mr-2"
               (click)="verModelo(modelo)"
             />
+              <p-button
+              icon="pi pi-eye"
+              [rounded]="true"
+              label="Eliiminar"
+              severity="danger"
+              (click)="elimiarModelo(modelo)"
+          />
             </div>
         </p-card>
       </div>

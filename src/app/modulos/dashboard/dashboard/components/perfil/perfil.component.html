@@ -2,14 +2,23 @@
 
 <div class="p-card p-fluid p-mx-auto p-mt-5">
   <div class="p-card-header text-center p-6">
+   @if(obtenerRolConectado() === '2'){
     <p-avatar
-      image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-      pBadge
-      value="{{ notificaciones.length }}"
-      size="xlarge"
-      severity="danger"
-      (click)="irModelo()"
-    />
+    image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+    size="xlarge"
+  
+  />
+   } @else {
+    <p-avatar
+    image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+    pBadge
+    value="{{obtenerRolConectado()=== '1'? notificaciones.length : ''}}"
+    size="xlarge"
+  
+    severity="danger"
+    (click)="irModelo()"
+  />
+   }
   </div>
   <div class="p-card-body">
     <div class="text-center p-mb-4">
@@ -29,18 +38,32 @@
       <i class="pi pi-calendar font-semibold"></i>
       <span class="p-ml-2 ml-2">{{ informacionUsuario.edad }} años </span>
     </div>
+    <div class="flex justify-content-end col-12 ">
+        <div class="col-4">
+          <p-button
+          icon="pi pi-sync"
+          [rounded]="true"
+          label="Cambiar contraseña"
+          severity="success"
+          class="mr-2"
+          (click)="cambiarContrasenaUsuario()"
+        />
+        </div>
+    </div>
+
   </div>
 
 </div>
 <p-dialog
-  header="Cambio de contraseña requerido"
+  [header]="cambiarpassword ? 'Cambio de contraseña' : 'Cambio de contraseña requerido'"
   [modal]="true"
   [(visible)]="visible"
   [position]="'top'"
   [draggable]="false"
   [resizable]="false"
-  [closable]="false"
+  [closable]="cambiarpassword ? true : false"
   [style]="{ width: '45rem' }"
+  (onHide)="ocultarDialogo()"
 >
   <div class="p-fluid p-formgrid p-grid">
     <form [formGroup]="formulario">
