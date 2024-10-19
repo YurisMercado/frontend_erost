@@ -91,13 +91,15 @@
               class="mr-2"
               (click)="verModelo(modelo)"
             />
-              <p-button
-              icon="pi pi-eye"
-              [rounded]="true"
-              label="Eliiminar"
-              severity="danger"
-              (click)="elimiarModelo(modelo)"
-          />
+              @if(obtenerRolConectado() == '1') {
+                <p-button
+                icon="pi pi-eye"
+                [rounded]="true"
+                label="Eliiminar"
+                severity="danger"
+                (click)="elimiarModelo(modelo)"
+            />
+              }
             </div>
         </p-card>
       </div>
