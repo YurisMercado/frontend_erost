@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -26,13 +26,16 @@ import { Form, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@
   templateUrl: './modelos.component.html',
   styleUrl: './modelos.component.scss'
 })
-export class ModelosComponent implements OnInit {
+export class ModelosComponent implements OnInit, AfterViewInit {
 
   form: FormGroup = new FormGroup({});
 
   nuevoModelo: boolean = false;
   notificaciones: any[] = []; 
   constructor(private modelosService:ModelosService, private messageService:MessageService, private router:Router, private usuariosService: UsuariosService, private fb: FormBuilder) { }
+  ngAfterViewInit(): void {
+    this.consultarNoticicaciones();
+  }
   listaModelos: any[] = []; 
   fotoAleatoria: string = '';
     parametroBusqueda: string = '';
