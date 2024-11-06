@@ -94,8 +94,8 @@ export class DetalleModeloComponent implements OnInit {
     const modelo = history.state.modelo;
 
     this.informacionModelo = modelo;
-    console.log(this.informacionModelo);
-    if (this.informacionModelo?.detalleNotificacion?.length > 0) {
+    console.log("INFORMACION MODELO", this.informacionModelo);
+    if (this.informacionModelo?.length > 0) {
       this.sidebarVisible = true;
     }
     this.setearInformacionModelo(modelo);

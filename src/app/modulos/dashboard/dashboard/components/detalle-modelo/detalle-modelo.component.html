@@ -179,6 +179,18 @@
       </div>
     </div>
     <div class="col-6">
+
+      @if(informacionModelo.fotos.length === 0){
+        <p-button
+        icon="pi pi-file-plus"
+        class="m-2"
+        [rounded]="true"
+        [text]="true"
+        label="Nueva foto"
+        severity="success"
+        (click)="nuevaFoto()"
+      />
+      }
       <p-card>
         <p-galleria
           [value]="informacionModelo.fotos"

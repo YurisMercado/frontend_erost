@@ -44,7 +44,7 @@ export class ModelosComponent implements OnInit {
     this.consultarModelos();
     this.inicializarFormulario();
     this.escucharCampoBusqueda();
-    
+    this.consultarNoticicaciones();
   }
 
   inicializarFormulario() { 
@@ -118,6 +118,7 @@ export class ModelosComponent implements OnInit {
            this.notificaciones = response.data;
            let arrayNotificaciones: any[] = []; 
            this.listaModelos.map((modelo: any) => {
+             console.log("MODELO",modelo);  
               this.notificaciones.map((notificacion: any, i: any) => {
                 if(modelo.idts_empleado == notificacion.idts_modelo){
                   modelo.notificacion = true;
