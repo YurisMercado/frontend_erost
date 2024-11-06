@@ -41,11 +41,13 @@
     <div class="imagen-modelo">
       @if(modelo.notificacion && modelo.notificacion > 0 &&
       this.obtenerRolConectado() == '1') {
-      <i
-        class="pi pi-bell text-3xl p"
-        pBadge
-        value="{{ modelo.cantidadNotificaciones }}"
-      ></i>
+        <div class="flex justify-content-start ">
+          <i
+          class="pi pi-bell text-3xl p"
+          pBadge
+          value="{{ modelo.cantidadNotificaciones }}"
+        ></i>
+        </div>
       }
       <img [src]="modelo.fotos[0].base64 ?? 'assets/images/imagen.png'" />
 
