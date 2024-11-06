@@ -11,9 +11,12 @@ export class MonitorService {
 
   constructor(private http: HttpClient) { }
 
-
   guardarComentarioMonitor(data: any):Observable<any>{
     return this.http.post<Observable<any>>(this.url + 'comentario-monitor', data);
+  }
+
+  guardarComentarioAdministrador(data: any):Observable<any>{
+    return this.http.post<Observable<any>>(this.url + 'comentario-admin', data);
   }
 
  

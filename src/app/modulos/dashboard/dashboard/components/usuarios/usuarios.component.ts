@@ -131,7 +131,7 @@ export class UsuariosComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Exito',
-            detail: data.message,
+            detail: 'Operación realizada con éxito',
           });
         }
       },

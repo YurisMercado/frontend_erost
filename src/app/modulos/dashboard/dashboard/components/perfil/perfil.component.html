@@ -23,7 +23,7 @@
   <div class="p-card-body">
     <div class="text-center p-mb-4">
       <h2 class="p-m-0">Bienvenido, {{ informacionUsuario.nombre }}</h2>
-      <p class="p-text-secondary">{{ informacionUsuario.cargo }}</p>
+      <p class="p-text-secondary">{{obtenerRolConectado() == '1' ? 'Administrador': 'Monitor' }}</p>
     </div>
 
     <div

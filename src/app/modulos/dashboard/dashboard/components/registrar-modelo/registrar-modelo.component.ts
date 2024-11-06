@@ -14,6 +14,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ModelosService } from '../../services/modelos.service';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-registrar-modelo',
@@ -31,7 +32,8 @@ import { ModelosService } from '../../services/modelos.service';
     AccordionModule,
     InputTextareaModule,
     TableModule,
-    ToastModule
+    ToastModule,
+    CalendarModule
   ],
   templateUrl: './registrar-modelo.component.html',
   styleUrl: './registrar-modelo.component.scss',
@@ -59,6 +61,8 @@ export class RegistrarModeloComponent {
       email: ['', [Validators.required]],
       edad: ['', [Validators.required]],
       cargo: ['', [Validators.required]],
+      horaInicio: ['', [Validators.required]],
+      horaFin: ['', [Validators.required]],
       fotos: this.fb.array([], [Validators.required]),
       rol: ['', [Validators.required]],
       habilidad:  [''],
@@ -91,7 +95,6 @@ export class RegistrarModeloComponent {
   addFotoToForm(base64: string) {
     const fotosFormArray = this.formulario.get('fotos') as FormArray;
     fotosFormArray.push(this.fb.control(base64));
-    console.log(this.formulario.getRawValue());
   }
 
   agregarHabilidad(){
@@ -135,6 +138,8 @@ export class RegistrarModeloComponent {
       email: this.formulario.get('email')?.value,
       edad: this.formulario.get('edad')?.value,
       fotos: this.formulario.get('fotos')?.value,
+      horaInicio: this.formulario.get('horaInicio')?.value ? new Date(this.formulario.get('horaInicio')?.value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
+      horaFin: this.formulario.get('horaFin')?.value ? new Date(this.formulario.get('horaFin')?.value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
       habilidades: this.obtenerHabilidades(),
       conocimientos: this.obtenerConocimientos()
     }

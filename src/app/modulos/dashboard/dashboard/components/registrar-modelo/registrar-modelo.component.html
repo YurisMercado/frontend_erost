@@ -73,6 +73,41 @@
             </div>
           </div>
         </div>
+          <div class="col-5">
+            <div class="border-round-sm font-bold">
+              <div class="flex flex-column gap-2">
+                <label for="username">Horario inicio </label>
+                <p-calendar 
+                [iconDisplay]="'input'" 
+                [showIcon]="true" 
+                [timeOnly]="true" 
+                formControlName="horaInicio"
+                inputId="templatedisplay">
+                    <ng-template pTemplate="inputicon" let-clickCallBack="clickCallBack">
+                        <i class="pi pi-calendar-clock pointer-events-none" (click)="clickCallBack($event)"></i>
+                    </ng-template>
+            </p-calendar>
+              </div>
+            </div>
+          </div>
+          <div class="col-5 ">
+            <div class="border-round-sm font-bold ">
+              <div class="flex flex-column gap-2 ">
+                <label for="username">Horario  fin </label>
+                <p-calendar 
+                [iconDisplay]="'input'" 
+                [showIcon]="true" 
+                [timeOnly]="true" 
+                formControlName="horaFin"
+                inputId="templatedisplay">
+                    <ng-template pTemplate="inputicon" let-clickCallBack="clickCallBack">
+                        <i class="pi pi-calendar-clock pointer-events-none" (click)="clickCallBack($event)"></i>
+                    </ng-template>
+            </p-calendar>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="col-6">
           <div class="border-round-sm font-bold">
             <div class="flex flex-column gap-2">
@@ -93,7 +128,6 @@
             </div>
           </div>
         </div>
-      </div>
     </p-accordionTab>
     <p-accordionTab>
       <ng-template pTemplate="header">

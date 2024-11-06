@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -29,6 +30,9 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { EditarConocimientoComponent } from '../editar-conocimiento/editar-conocimiento.component';
 import { EditarHabilidadComponent } from '../editar-habilidad/editar-habilidad.component';
 import { Router } from '@angular/router';
+import { NuevaFotoComponent } from '../nueva-foto/nueva-foto.component';
+import { ComentarioAdministradorComponent } from '../comentario-administrador/comentario-administrador.component';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-detalle-modelo',
@@ -54,16 +58,16 @@ import { Router } from '@angular/router';
     NuevaHabilidadComponent,
     SidebarModule,
     EditarConocimientoComponent,
-    EditarHabilidadComponent
+    EditarHabilidadComponent,
+    NuevaFotoComponent,
+    ComentarioAdministradorComponent,
+    CalendarModule,
   ],
   providers: [ModelosService, ModelosComponent],
   templateUrl: './detalle-modelo.component.html',
   styleUrl: './detalle-modelo.component.scss',
 })
 export class DetalleModeloComponent implements OnInit {
-
-
-
   formulario: FormGroup = new FormGroup({});
   checked: boolean = false;
   informacionModelo: any = {};
@@ -71,16 +75,17 @@ export class DetalleModeloComponent implements OnInit {
   visible: boolean = false;
   pantalla: string = '';
   titulo: string = '';
-  idts_fotos: string = '';  
-  sidebarVisible: boolean = false;  
+  idts_fotos: string = '';
+  sidebarVisible: boolean = false;
   informacionSeleccionada: any = {};
+  uploadedFiles: { base64: string }[] = [];
 
   constructor(
     private fb: FormBuilder,
     private messageService: MessageService,
     private modelosService: ModelosService,
     private modelosComponent: ModelosComponent,
-    private  usuariosService: UsuariosService,
+    private usuariosService: UsuariosService,
     private router: Router
   ) {}
 
@@ -89,6 +94,7 @@ export class DetalleModeloComponent implements OnInit {
     const modelo = history.state.modelo;
 
     this.informacionModelo = modelo;
+    console.log(this.informacionModelo);
     if (this.informacionModelo?.detalleNotificacion?.length > 0) {
       this.sidebarVisible = true;
     }
@@ -117,9 +123,18 @@ export class DetalleModeloComponent implements OnInit {
     this.formulario.get('nombre')?.setValue(datos.nombre);
     this.formulario.get('email')?.setValue(datos.email);
     this.formulario.get('edad')?.setValue(datos.edad);
-    datos.actitud_positiva == 1 ? this.formulario.get('actitud_positiva')?.setValue(true) : this.formulario.get('actitud_positiva')?.setValue(false);
-    datos.profesionalismo == 1 ? this.formulario.get('profesionalismo')?.setValue(true) : this.formulario.get('profesionalismo')?.setValue(false);
-    datos.adaptabilidad == 1 ? this.formulario.get('adaptabilidad')?.setValue(true) : this.formulario.get('adaptabilidad')?.setValue(false);
+    this.formulario.get('horaInicio')?.setValue(datos.horaInicio);
+    this.formulario.get('horaFin')?.setValue(datos.horaFin);
+
+    datos.actitud_positiva == 1
+      ? this.formulario.get('actitud_positiva')?.setValue(true)
+      : this.formulario.get('actitud_positiva')?.setValue(false);
+    datos.profesionalismo == 1
+      ? this.formulario.get('profesionalismo')?.setValue(true)
+      : this.formulario.get('profesionalismo')?.setValue(false);
+    datos.adaptabilidad == 1
+      ? this.formulario.get('adaptabilidad')?.setValue(true)
+      : this.formulario.get('adaptabilidad')?.setValue(false);
   }
 
   inicializarFormulario() {
@@ -131,6 +146,8 @@ export class DetalleModeloComponent implements OnInit {
       actitud_positiva: [''],
       profesionalismo: [''],
       adaptabilidad: [''],
+      horaInicio: [''],
+      horaFin: [''],
     });
   }
 
@@ -139,36 +156,50 @@ export class DetalleModeloComponent implements OnInit {
   }
 
   editarFoto(foto: any) {
-     this.visible = true;
+    this.visible = true;
     this.pantalla = 'actualizarFoto';
     this.titulo = 'Actualizar Foto';
     this.idts_fotos = foto.idts_fotos;
   }
 
   eliminarFoto(foto: any) {
-     const parametros = {
-      idts_fotos: foto.idts_fotos
-     }
+    const parametros = {
+      idts_fotos: foto.idts_fotos,
+    };
 
-      this.modelosService.eliminarFoto(parametros).subscribe({ 
-        next: (data) => {
-          if(data.status == 200){
-            this.messageService.add({severity:'success', summary: 'Exito', detail: 'Foto eliminada correctamente'});
-            this.informacionModelo.fotos = this.informacionModelo.fotos.filter((foto: any) => foto.idts_fotos != parametros.idts_fotos);
-          }
-        },
-        error: (error) => {
-          this.messageService.add({severity:'error', summary: 'Error', detail: 'Error al eliminar la foto'});
+    this.modelosService.eliminarFoto(parametros).subscribe({
+      next: (data) => {
+        if (data.status == 200) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Exito',
+            detail: 'Foto eliminada correctamente',
+          });
+          this.informacionModelo.fotos = this.informacionModelo.fotos.filter(
+            (foto: any) => foto.idts_fotos != parametros.idts_fotos
+          );
         }
-       })
-
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al eliminar la foto',
+        });
+      },
+    });
   }
-
 
   crearComentario() {
     this.visible = true;
     this.pantalla = 'comentarioMonitor';
     this.titulo = 'Comentario Monitor';
+  }
+
+  comentarioAdministrador() {
+    this.visible = true;
+    this.pantalla = 'comentarioAdministrador';
+    this.titulo = 'Comentario Administrador';
   }
 
   actualizarInformacion() {
@@ -189,8 +220,22 @@ export class DetalleModeloComponent implements OnInit {
         nombre: this.formulario.get('nombre')?.value,
         email: this.formulario.get('email')?.value,
         edad: this.formulario.get('edad')?.value,
+        fechaInicio: this.formulario.get('horaInicio')?.value
+          ? typeof this.formulario.get('horaInicio')?.value === 'string'
+        ? this.formulario.get('horaInicio')?.value
+        : new Date(
+            this.formulario.get('horaInicio')?.value
+          ).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : '',
+        fechaFin: this.formulario.get('horaFin')?.value
+          ? typeof this.formulario.get('horaFin')?.value === 'string'
+        ? this.formulario.get('horaFin')?.value
+        : new Date(this.formulario.get('horaFin')?.value).toLocaleTimeString(
+            [],
+            { hour: '2-digit', minute: '2-digit' }
+          )
+          : '',
       };
-
       this.modelosService.actualizarModelo(parametros).subscribe({
         next: (data) => {
           if (data.status == 200) {
@@ -215,11 +260,13 @@ export class DetalleModeloComponent implements OnInit {
   guardarActidu(campo: string) {
     switch (campo) {
       case '1':
-        let checked = !this.formulario.get('actitud_positiva')?.value ? false : true;
+        let checked = !this.formulario.get('actitud_positiva')?.value
+          ? false
+          : true;
         this.formulario.get('actitud_positiva')?.setValue(checked);
         let parametros = {
           idts_empleado: this.informacionModelo.idts_empleado,
-          dato:  this.formulario.get('actitud_positiva')?.value ,
+          dato: this.formulario.get('actitud_positiva')?.value,
           tipo: 'actitud_positiva',
         };
         this.modelosService.guardarActitud(parametros).subscribe({
@@ -239,14 +286,16 @@ export class DetalleModeloComponent implements OnInit {
               detail: 'Error al guardar actitud',
             });
           },
-        })
+        });
         break;
       case '2':
-        let checked2 = !this.formulario.get('profesionalismo')?.value ? false : true;
+        let checked2 = !this.formulario.get('profesionalismo')?.value
+          ? false
+          : true;
         this.formulario.get('profesionalismo')?.setValue(checked2);
         let parametros2 = {
           idts_empleado: this.informacionModelo.idts_empleado,
-          dato:  this.formulario.get('profesionalismo')?.value ,
+          dato: this.formulario.get('profesionalismo')?.value,
           tipo: 'profesionalismo',
         };
         console.log(parametros2);
@@ -267,14 +316,16 @@ export class DetalleModeloComponent implements OnInit {
               detail: 'Error al guardar actitud',
             });
           },
-        })
+        });
         break;
       case '3':
-        let checked3 = !this.formulario.get('adaptabilidad')?.value ? false : true;
+        let checked3 = !this.formulario.get('adaptabilidad')?.value
+          ? false
+          : true;
         this.formulario.get('adaptabilidad')?.setValue(checked3);
         let parametros3 = {
           idts_empleado: this.informacionModelo.idts_empleado,
-          dato:  this.formulario.get('adaptabilidad')?.value ,
+          dato: this.formulario.get('adaptabilidad')?.value,
           tipo: 'adaptabilidad',
         };
         console.log(parametros3);
@@ -295,100 +346,178 @@ export class DetalleModeloComponent implements OnInit {
               detail: 'Error al guardar actitud',
             });
           },
-        })
+        });
         break;
     }
   }
 
-  crearConocimiento(){
+  crearConocimiento() {
     this.visible = true;
     this.pantalla = 'nuevoConocimiento';
     this.titulo = 'Nuevo Conocimiento';
   }
 
-  crearHabilidad(){
+  crearHabilidad() {
     this.visible = true;
     this.pantalla = 'nuevaHabilidad';
     this.titulo = 'Nueva Habilidad';
   }
 
-  consultarModelos(){
+  consultarModelos() {
     this.visible = false;
-
   }
 
   marcarNoficicacionLeida(notificacionLeida: any) {
-     console.log(notificacionLeida);
-     const parametros = {
-      idts_notificaciones: notificacionLeida.idts_notificaciones
-     }
+    console.log(notificacionLeida);
+    const parametros = {
+      idts_notificaciones: notificacionLeida.idts_notificaciones,
+    };
 
-      this.usuariosService.marcarNotificacionLeida(parametros).subscribe({
-        next: (data) => {
-          if(data.status == 200){
-            this.messageService.add({severity:'success', summary: 'Exito', detail: 'Notificación marcada como leida'});
-            setTimeout(() => {
-              this.router.navigate(['/dashboard/modelos']);
-            }, 2000);
-          }
+    this.usuariosService.marcarNotificacionLeida(parametros).subscribe({
+      next: (data) => {
+        if (data.status == 200) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Exito',
+            detail: 'Notificación marcada como leida',
+          });
+          setTimeout(() => {
+            this.router.navigate(['/dashboard/modelos']);
+          }, 2000);
         }
-      })
+      },
+    });
   }
 
   eliminarConocimiento(conocimiento: any) {
-     const parametros = {
+    const parametros = {
       idts_empleado: this.informacionModelo.idts_empleado,
-      idts_conocimiento: Number(conocimiento.idts_conocimiento)
-     }
+      idts_conocimiento: Number(conocimiento.idts_conocimiento),
+    };
 
-     this.modelosService.eliminarConocimiento(parametros).subscribe({
-        next: (data) => {
-          if(data.status == 200){
-            this.messageService.add({severity:'success', summary: 'Exito', detail: 'Conocimiento eliminado correctamente'});
-            this.informacionModelo.conocimientos = this.informacionModelo.conocimientos.filter((conocimiento: any) => conocimiento.idts_conocimiento != parametros.idts_conocimiento);
-          }
-        },
-        error: (error) => {
-          this.messageService.add({severity:'error', summary: 'Error', detail: 'Error al eliminar conocimiento'});
+    this.modelosService.eliminarConocimiento(parametros).subscribe({
+      next: (data) => {
+        if (data.status == 200) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Exito',
+            detail: 'Conocimiento eliminado correctamente',
+          });
+          this.informacionModelo.conocimientos =
+            this.informacionModelo.conocimientos.filter(
+              (conocimiento: any) =>
+                conocimiento.idts_conocimiento != parametros.idts_conocimiento
+            );
         }
-     })
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al eliminar conocimiento',
+        });
+      },
+    });
   }
 
   eliminarHabilidad(conocimiento: any) {
     console.log(conocimiento);
     const parametros = {
-     idts_empleado: this.informacionModelo.idts_empleado,
-     idts_habilidad: Number(conocimiento.idts_habilidades)
-    }
+      idts_empleado: this.informacionModelo.idts_empleado,
+      idts_habilidad: Number(conocimiento.idts_habilidades),
+    };
 
     this.modelosService.eliminarHabilidad(parametros).subscribe({
-       next: (data) => {
-         if(data.data){
-           this.messageService.add({severity:'success', summary: 'Exito', detail: 'Conocimiento eliminado correctamente'});
-          
-           this.informacionModelo.conocimientos = this.informacionModelo.habilidades.filter((conocimiento: any) => conocimiento.idts_habilidad != parametros.idts_habilidad);
-         }
-       },
-        error: (error) => {
-          console.log(this.informacionModelo);
-          this.informacionModelo.habilidades = this.informacionModelo.habilidades.filter((conocimiento: any) => conocimiento.idts_habilidades != parametros.idts_habilidad);
-        }
-    })
- }
+      next: (data) => {
+        if (data.data) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Exito',
+            detail: 'Conocimiento eliminado correctamente',
+          });
 
- editarConocimiento(_t135: any) {
+          this.informacionModelo.conocimientos =
+            this.informacionModelo.habilidades.filter(
+              (conocimiento: any) =>
+                conocimiento.idts_habilidad != parametros.idts_habilidad
+            );
+        }
+      },
+      error: (error) => {
+        console.log(this.informacionModelo);
+        this.informacionModelo.habilidades =
+          this.informacionModelo.habilidades.filter(
+            (conocimiento: any) =>
+              conocimiento.idts_habilidades != parametros.idts_habilidad
+          );
+      },
+    });
+  }
+
+  nuevaFoto() {
+    this.visible = true;
+    this.pantalla = 'nuevaFoto';
+    this.titulo = 'Nueva Foto';
+  }
+
+  editarConocimiento(_t135: any) {
     this.visible = true;
     this.pantalla = 'editarConocimiento';
     this.titulo = 'Editar Conocimiento';
     this.informacionSeleccionada = _t135;
- }
+  }
 
- editarHabilidad(_t172: any) {
-  this.visible = true;
-  this.pantalla = 'editarHabilidad';
-  this.titulo = 'Editar Habilidad';
-  this.informacionSeleccionada = _t172;
-}
-    
+  editarHabilidad(_t172: any) {
+    this.visible = true;
+    this.pantalla = 'editarHabilidad';
+    this.titulo = 'Editar Habilidad';
+    this.informacionSeleccionada = _t172;
+  }
 
+  onUpload(event: any) {
+    const files = event.files;
+
+    for (let file of files) {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        const base64 = e.target.result;
+        this.uploadedFiles.push({
+          base64: base64,
+        });
+        this.addFotoToForm(base64);
+      };
+
+      reader.readAsDataURL(file); 
+    }
+  }
+
+  addFotoToForm(base64: string) {
+    const fotosFormArray = this.formulario.get('fotos') as FormArray;
+    fotosFormArray.push(this.fb.control(base64));
+    console.log(this.formulario.getRawValue());
+  }
+
+  guardarNuevaFoto(parametros: any) {
+    this.modelosService.nuevaFoto(parametros).subscribe({
+      next: (data) => {
+        if (data.status == 200) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Exito',
+            detail: 'Foto guardada correctamente',
+          });
+          this.informacionModelo.fotos.push(data.data);
+          this.router.navigate(['/dashboard/modelos']);
+        }
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al guardar la foto',
+        });
+      },
+    });
+  }
 }

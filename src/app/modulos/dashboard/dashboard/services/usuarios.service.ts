@@ -40,4 +40,6 @@ export class UsuariosService {
     return this.http.put<Observable<any>>(this.url + 'inactivar-usuario', parametros);
   }
 
+
+
 }

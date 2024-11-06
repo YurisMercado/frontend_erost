@@ -75,5 +75,12 @@ export class ModelosService {
     return this.http.post<Observable<any>>(this.url + `eliminar-foto`, data);
   }
 
+  nuevaFoto(data: any): Observable<any>{
+    return this.http.post<Observable<any>>(this.url + `nueva-foto`, data);
+  }
+
+  consultarModelosPorParametro(parametros: any):Observable<any>{
+    return this.http.post<Observable<any>>(this.url + 'filtrar-modelos', parametros);
+  }
 
 }

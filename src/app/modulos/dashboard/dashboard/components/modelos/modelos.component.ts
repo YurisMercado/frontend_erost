@@ -14,38 +14,57 @@ import { Router } from '@angular/router';
 import {  TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { UsuariosService } from '../../services/usuarios.service';
+import { AvatarModule } from 'primeng/avatar';
+import { InputTextModule } from 'primeng/inputtext';
+import { Form, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-modelos',
   standalone: true,
-  imports: [CommonModule, CardModule, FieldsetModule, ButtonModule,  DialogModule, RegistrarModeloComponent, ListboxModule,AccordionModule,ChipModule, TableModule, BadgeModule],
+  imports: [CommonModule, CardModule, AvatarModule, FieldsetModule, ButtonModule,  DialogModule, RegistrarModeloComponent, ListboxModule,AccordionModule,ChipModule, TableModule, BadgeModule, InputTextModule, ReactiveFormsModule],
   providers: [ModelosService],
   templateUrl: './modelos.component.html',
   styleUrl: './modelos.component.scss'
 })
 export class ModelosComponent implements OnInit {
 
-
+  form: FormGroup = new FormGroup({});
 
   nuevoModelo: boolean = false;
   notificaciones: any[] = []; 
-  constructor(private modelosService:ModelosService, private messageService:MessageService, private router:Router, private usuariosService: UsuariosService) { }
+  constructor(private modelosService:ModelosService, private messageService:MessageService, private router:Router, private usuariosService: UsuariosService, private fb: FormBuilder) { }
   listaModelos: any[] = []; 
   fotoAleatoria: string = '';
-
+    parametroBusqueda: string = '';
   abrirModal() {
     this.nuevoModelo = true;
   }
 
   ngOnInit(): void {
     this.consultarModelos();
-   
+    this.inicializarFormulario();
+    this.escucharCampoBusqueda();
     
+  }
+
+  inicializarFormulario() { 
+    this.form = this.fb.group({
+      busqueda: ['', [Validators.required]],
+    });
   }
 
   cerrarDialogo(){
     this.nuevoModelo = false
     this.consultarModelos();
+  }
+  
+  escucharCampoBusqueda(){
+    this.form.get('busqueda')?.valueChanges.subscribe((busqueda: any) => {
+      this.parametroBusqueda = busqueda
+      if(this.parametroBusqueda != ''){
+        this.consultarModelosPorParametro();  
+      }
+    })
   }
 
   consultarModelos(){
@@ -55,7 +74,27 @@ export class ModelosComponent implements OnInit {
           this.listaModelos = response.data;
            response.data.forEach((modelo: any) => {
            });
-           this.consultarNoticicaciones();
+         }
+      },
+      error: (error) => {
+        console.log(error);
+        this.messageService.add({severity:'error', summary: 'Error', detail: 'Error al consultar los modelos'});
+      }
+    });
+  }
+
+  consultarModelosPorParametro(){
+      this.listaModelos = [];
+      let parametros = {
+        busqueda: this.parametroBusqueda
+      }
+       this.modelosService.consultarModelosPorParametro(parametros).subscribe({
+      next: (response) => {
+         if(response.status == 200){
+          this.listaModelos = response.data;
+              response.data.forEach((modelo: any) => {
+          });
+          console.log("CONSUILTA INFORMACION",this.listaModelos);
          }
       },
       error: (error) => {
@@ -120,7 +159,11 @@ elimiarModelo(_t8: any) {
   })
 }
  
-
+reiniciarFiltros(){
+  this.form.reset();
+  this.parametroBusqueda = '';
+  this.consultarModelos();
+}
   
 
 

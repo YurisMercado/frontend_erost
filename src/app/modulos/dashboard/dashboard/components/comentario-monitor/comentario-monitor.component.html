@@ -1,33 +1,39 @@
 <form [formGroup]="formulario">
-  <div class="flex flex-column justify-content-center align-items-center">
-    <div class="p-2">
-      <p-dropdown
-        [options]="tipoComentario"
-        optionLabel="label"
-        class="w-full"
-        width="100%"
-        
-        formControlName="tipo"
-        placeholder="Tipo de comentario"
-      />
-    </div>
+  <div class="flex flex-column gap-4 p-3 w-full">
 
-    <textarea
-      rows="5"
-      cols="30"
-      pInputTextarea
-      placeholder="Comentario"
-      formControlName="comentario"
-    ></textarea>
+      <div class="flex flex-column w-full">
+          <label for="tipo" class="form-label mb-2">Tipo de comentario</label>
+          <p-dropdown
+              [options]="tipoComentario"
+              optionLabel="label"
+              class="w-full"
+              formControlName="tipo"
+              placeholder="Seleccionar tipo de comentario"
+              id="tipo"
+          ></p-dropdown>
+      </div>
 
-    <div class="p-2">
-      <p-button
-        icon="pi pi-trash"
-        [rounded]="true"
-        label="Guardar comentario"
-        severity="success"
-        (onClick)="guardarComentario()"
-      />
-    </div>
+      <div class="flex flex-column w-full">
+          <label for="comentario" class="form-label mb-2">Comentario</label>
+          <textarea
+              rows="5"
+              pInputTextarea
+              placeholder="Escribe tu comentario"
+              formControlName="comentario"
+              id="comentario"
+              class="w-full"
+          ></textarea>
+      </div>
+
+      <div class="flex justify-content-center w-full mt-3">
+          <p-button
+              icon="pi pi-save"
+              label="Guardar comentario"
+              severity="success"
+              (onClick)="guardarComentario()"
+              class="p-button-rounded p-button-success"
+          ></p-button>
+      </div>
+
   </div>
 </form>
