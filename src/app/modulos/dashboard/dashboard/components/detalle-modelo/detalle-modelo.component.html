@@ -247,14 +247,17 @@
         <th>Fecha de registro</th>
         <th>id modelo</th>
         <th>Tipo de comentario</th>
+        <th>Nombre habilidad o conocimiento</th>
         <th>Descripción</th>
         <th>Marcar como leido</th>
+        <th>Agregar comentario</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-detalleNotificacion>
       <tr>
         <td>{{ detalleNotificacion.nombre_registrador }}</td>
         <td>{{ detalleNotificacion.fecha_registro }}</td>
+        <td>{{ detalleNotificacion.nombre }}</td>
         <td>{{ detalleNotificacion.idts_modelo }}</td>
         <td>{{ detalleNotificacion.tipo_comentario }}</td>
         <td>{{ detalleNotificacion.descripcion }}</td>
@@ -265,6 +268,18 @@
             (click)="marcarNoficicacionLeida(detalleNotificacion)"
             id=""
           />
+        </td>
+        <td>
+          <p-button
+          icon="pi pi-file-edit"
+          [rounded]="true"
+          [text]="true"
+          class="p-2 mr-2"
+          label="Agregar comentario"
+          severity="info"
+          (click)="agragarComentarioAutomatico(detalleNotificacion)"
+          [disabled]="obtenerRolConectado() === '2'"
+        />
         </td>
       </tr>
     </ng-template>
@@ -395,6 +410,7 @@
   @switch (pantalla) { @case ('comentarioMonitor') {
   <app-comentario-monitor
     [idModelo]="informacionModelo.idts_empleado"
+    (cerraModal)="cerrarModal()"
   ></app-comentario-monitor>
   } @case ('actualizarFoto') {
   <app-actualizarfoto [idts_fotos]="idts_fotos"></app-actualizarfoto>
@@ -430,3 +446,6 @@
   <span>No hay una pantalla configurada</span>
   } }
 </p-dialog>
+<p-confirmDialog>
+>
+</p-confirmDialog>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Form, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Button, ButtonModule } from 'primeng/button';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -7,11 +7,12 @@ import { MonitorService } from '../../services/monitor.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-comentario-monitor',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, InputTextareaModule, ButtonModule, ToastModule, DropdownModule], 
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, InputTextareaModule, ButtonModule, ToastModule, DropdownModule, InputTextModule], 
   templateUrl: './comentario-monitor.component.html',
   styleUrl: './comentario-monitor.component.scss'
 })
@@ -25,6 +26,8 @@ export class ComentarioMonitorComponent implements OnInit {
   @Input() set idModelo(value: number){
     this._idModelo = value;
   }
+
+  @Output() cerraModal: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private fb:FormBuilder, private monitorService:MonitorService,private messageService: MessageService) { } 
 
@@ -41,6 +44,7 @@ export class ComentarioMonitorComponent implements OnInit {
   inicializarFormulario(){
     this.formulario = this.fb.group({
       comentario: [''],
+      nombre: [''],
       tipo: ['']
     })
   }
@@ -49,6 +53,7 @@ export class ComentarioMonitorComponent implements OnInit {
     let parametros = {
 
       idts_modelo: this.idModelo,
+      nombre: this.formulario.value.nombre,
       nombre_registrador: this.informacion.nombre,
       descripcion: this.formulario.value.comentario,
       tipo_comentario: this.formulario.value.tipo.value
@@ -60,6 +65,7 @@ export class ComentarioMonitorComponent implements OnInit {
          if(data.status == 200){
             this.messageService.add({severity:'success', summary:'Exito', detail:'Comentario guardado correctamente'});
            this.formulario.reset();
+           this.cerraModal.emit(true);
          }
       },
       error: (error) => {

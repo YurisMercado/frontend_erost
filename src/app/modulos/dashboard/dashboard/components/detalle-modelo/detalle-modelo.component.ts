@@ -19,7 +19,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { ComentarioMonitorComponent } from '../comentario-monitor/comentario-monitor.component';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ModelosService } from '../../services/modelos.service';
 import { ActualizarfotoComponent } from '../actualizarfoto/actualizarfoto.component';
 import { NuevoConocimientoComponent } from '../nuevo-conocimiento/nuevo-conocimiento.component';
@@ -33,6 +33,8 @@ import { Router } from '@angular/router';
 import { NuevaFotoComponent } from '../nueva-foto/nueva-foto.component';
 import { ComentarioAdministradorComponent } from '../comentario-administrador/comentario-administrador.component';
 import { CalendarModule } from 'primeng/calendar';
+import { MonitorService } from '../../services/monitor.service';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-detalle-modelo',
@@ -62,12 +64,14 @@ import { CalendarModule } from 'primeng/calendar';
     NuevaFotoComponent,
     ComentarioAdministradorComponent,
     CalendarModule,
+    ConfirmDialogModule
   ],
-  providers: [ModelosService, ModelosComponent],
+  providers: [ModelosService, ModelosComponent,ConfirmationService],
   templateUrl: './detalle-modelo.component.html',
   styleUrl: './detalle-modelo.component.scss',
 })
 export class DetalleModeloComponent implements OnInit {
+
   formulario: FormGroup = new FormGroup({});
   checked: boolean = false;
   informacionModelo: any = {};
@@ -86,7 +90,9 @@ export class DetalleModeloComponent implements OnInit {
     private modelosService: ModelosService,
     private modelosComponent: ModelosComponent,
     private usuariosService: UsuariosService,
-    private router: Router
+    private router: Router,
+    private monitorService:MonitorService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -368,7 +374,28 @@ export class DetalleModeloComponent implements OnInit {
   }
 
   marcarNoficicacionLeida(notificacionLeida: any) {
-    console.log(notificacionLeida);
+
+      this.confirmationService.confirm({
+          header: 'Alerta de confirmación',
+          message: 'Estás por marcar este comentario como leído, pero no se ha agregado a los conocimientos o habilidades. Si lo marcas, deberás actualizarlo manualmente.',
+          acceptIcon: 'pi pi-check mr-2',
+          icon: 'pi pi-exclamation-triangle',
+          rejectIcon: 'pi pi-times mr-2',
+          acceptLabel: 'Aceptar',
+          rejectLabel: 'Cancelar',
+          rejectButtonStyleClass: 'p-button-sm',
+          acceptButtonStyleClass: 'p-button-outlined p-button-sm',
+          accept: () => {
+            this.notificacionLeida(notificacionLeida);
+          },
+          reject: () => {
+              this.messageService.add({ severity: 'error', summary: 'Cancelado', detail: 'Acción cancelada por el usuario', life: 3000 });
+          }
+      });
+  
+  }
+
+  notificacionLeida(notificacionLeida: any) {
     const parametros = {
       idts_notificaciones: notificacionLeida.idts_notificaciones,
     };
@@ -519,5 +546,38 @@ export class DetalleModeloComponent implements OnInit {
         });
       },
     });
+
+    
   }
+
+  agragarComentarioAutomatico(argumentos: any) {
+      let parametros = {
+        idts_modelo: argumentos.idts_modelo,
+        nombre: argumentos.nombre, 
+        descripcion: argumentos.descripcion,
+        tipo_comentario:argumentos.tipo_comentario
+      }
+      this.monitorService.guardarComentarioAdministrador(parametros).subscribe({
+        next: (data) => {
+           console.log(data);
+           if(data.status == 200){
+              this.messageService.add({severity:'success', summary:'Exito', detail:'Comentario guardado correctamente'});
+              this.notificacionLeida(argumentos);
+             this.formulario.reset();
+             setTimeout(() => {
+               this.router.navigate(['/dashboard/modelos']);  
+             }, 1000);
+           }
+        },
+        error: (error) => {
+          this.messageService.add({severity:'error', summary:'Error', detail:'Error al guardar comentario'});
+        }
+      })
+    }
+    
+    cerrarModal() {
+      this.visible = false;
+    }
+      
+  
 }

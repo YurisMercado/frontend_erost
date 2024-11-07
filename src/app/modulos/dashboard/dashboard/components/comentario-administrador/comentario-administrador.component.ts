@@ -25,7 +25,7 @@ export class ComentarioAdministradorComponent {
     this._idModelo = value;
   }
 
-  constructor(private fb:FormBuilder, private monitorService:MonitorService,private messageService: MessageService, private router:Router) { } 
+  constructor(private fb:FormBuilder, private messageService: MessageService, private router:Router) { } 
 
   ngOnInit(): void {
     this.inicializarFormulario();
@@ -45,31 +45,7 @@ export class ComentarioAdministradorComponent {
     })
   }
 
-  guardarComentario() {
-    let parametros = {
-      idts_modelo: this.idModelo,
-      nombre: this.formulario.controls['nombre'].value, 
-      descripcion: this.formulario.value.comentario,
-      tipo_comentario: this.formulario.value.tipo.value
-    }
-    console.log(parametros);
-    this.monitorService.guardarComentarioAdministrador(parametros).subscribe({
-      next: (data) => {
-         console.log(data);
-         if(data.status == 200){
-            this.messageService.add({severity:'success', summary:'Exito', detail:'Comentario guardado correctamente'});
-           this.formulario.reset();
-           setTimeout(() => {
-             this.router.navigate(['/dashboard/modelos']);  
-           }, 1000);
-         }
-      },
-      error: (error) => {
-        this.messageService.add({severity:'error', summary:'Error', detail:'Error al guardar comentario'});
-      }
-    })
-  }
-
+ 
   get idModelo(){
     return this._idModelo as number ;
   } 
