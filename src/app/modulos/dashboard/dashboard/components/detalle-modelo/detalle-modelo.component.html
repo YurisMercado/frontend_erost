@@ -1,18 +1,6 @@
 <p-toast></p-toast>
 
 <form [formGroup]="formulario">
-  @if (this.obtenerRolConectado() == '1') {
-    <div class="flex justify-content-end">
-      <p-button
-      icon="pi pi-plus"
-      [rounded]="true"
-      severity="success"
-      label="Agregar nuevo comentario"
-      [disabled]="obtenerRolConectado() === '2'"
-      (onClick)="comentarioAdministrador()"
-      />
-    </div>
-  }
 
   <div class="flex flex-wrap">
 
@@ -201,7 +189,8 @@
           <ng-template pTemplate="item" let-item let-i="index">
             <img [src]="item.base64 ?? 'assets/images/imagen.png'" class="img" />
             <div clas="flex flex-column ">
-              <p-button
+               @if(obtenerRolConectado() === '1'){
+                <p-button
                 icon="pi pi-file-plus"
                 class="m-2"
                 [rounded]="true"
@@ -210,6 +199,7 @@
                 severity="success"
                 (click)="nuevaFoto()"
               />
+               }
               @if(item.base64 != null){
                 <p-button
                 icon="pi pi-file-edit"

@@ -33,9 +33,7 @@ export class ModelosComponent implements OnInit, AfterViewInit {
   nuevoModelo: boolean = false;
   notificaciones: any[] = []; 
   constructor(private modelosService:ModelosService, private messageService:MessageService, private router:Router, private usuariosService: UsuariosService, private fb: FormBuilder) { }
-  ngAfterViewInit(): void {
-    this.consultarNoticicaciones();
-  }
+ 
   listaModelos: any[] = []; 
   fotoAleatoria: string = '';
     parametroBusqueda: string = '';
@@ -47,6 +45,10 @@ export class ModelosComponent implements OnInit, AfterViewInit {
     this.consultarModelos();
     this.inicializarFormulario();
     this.escucharCampoBusqueda();
+    this.consultarNoticicaciones();
+  }
+
+  ngAfterViewInit(): void {
     this.consultarNoticicaciones();
   }
 
@@ -78,6 +80,7 @@ export class ModelosComponent implements OnInit, AfterViewInit {
            response.data.forEach((modelo: any) => {
            });
          }
+         this.consultarNoticicaciones();
       },
       error: (error) => {
         console.log(error);
