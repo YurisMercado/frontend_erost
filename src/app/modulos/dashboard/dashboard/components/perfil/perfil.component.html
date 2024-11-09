@@ -1,16 +1,15 @@
 <p-toast></p-toast>
-
 <div class="p-card p-fluid p-mx-auto p-mt-5">
   <div class="p-card-header text-center p-6">
    @if(obtenerRolConectado() === '2'){
     <p-avatar
-    image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+    image="data:image/jpeg;base64,{{informacionUsuario.foto}}"
     size="xlarge"
   
   />
    } @else {
     <p-avatar
-    image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+    image="data:image/jpeg;base64,{{informacionUsuario.foto}}"
     pBadge
     value="{{obtenerRolConectado()=== '1'? notificaciones.length : ''}}"
     size="xlarge"
